@@ -505,11 +505,11 @@
             <p>「こんなことは頼める？」の段階で大丈夫です。業務の課題から、実現できるかたちを一緒に探します。1〜2営業日以内にご返信します。</p>
             <div class="bucho-mini pose-point bucho-cta" role="img" aria-label="RISE部長"></div>
           </div>
-          <form class="cta-form" action="https://formsubmit.co/info@rise-ai.jp" method="POST">
-            <input type="hidden" name="_subject" value="【合同会社ライズ】お問い合わせ">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
-            <input type="text" name="_honey" style="display:none">
+          <form class="cta-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="aeed1847-3105-4b41-8187-60f2b3d71665">
+            <input type="hidden" name="subject" value="【合同会社ライズ】お問い合わせ">
+            <input type="hidden" name="from_name" value="合同会社ライズ お問い合わせフォーム">
+            <input type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true" style="display:none">
             <div class="field">
               <label for="f-name">お名前 <span aria-hidden="true">*</span></label>
               <input id="f-name" name="お名前" type="text" autocomplete="name" required>
@@ -520,14 +520,14 @@
             </div>
             <div class="field">
               <label for="f-email">メールアドレス <span aria-hidden="true">*</span></label>
-              <input id="f-email" name="メールアドレス" type="email" autocomplete="email" required>
+              <input id="f-email" name="email" type="email" autocomplete="email" required>
             </div>
             <div class="field">
               <label for="f-msg">ご相談内容 <span aria-hidden="true">*</span></label>
               <textarea id="f-msg" name="ご相談内容" rows="4" required></textarea>
             </div>
             <button class="btn btn-primary" type="submit">送信する <span class="arw" aria-hidden="true">→</span></button>
-            <p class="form-note">送信いただいた内容は、お問い合わせ対応のみに使用します。</p>
+            <p class="form-note" id="form-status">送信いただいた内容は、お問い合わせ対応のみに使用します。</p>
           </form>
         </div>
       </div>
@@ -572,6 +572,41 @@
         });
       },{threshold:.14,rootMargin:'0px 0px -8% 0px'});
       els.forEach(function(el){io.observe(el)});
+    })();
+
+    // 問い合わせフォーム（Web3Forms・AJAX送信でページ遷移なし）
+    (function(){
+      var form = document.getElementById('contact-form');
+      if(!form) return;
+      var status = document.getElementById('form-status');
+      var btn = form.querySelector('button[type=submit]');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        var original = btn.innerHTML;
+        btn.disabled = true; btn.style.opacity = '.65'; btn.textContent = '送信中…';
+        status.style.color = ''; status.textContent = '';
+        fetch('https://api.web3forms.com/submit', {
+          method:'POST', body:new FormData(form), headers:{'Accept':'application/json'}
+        })
+        .then(function(r){ return r.json(); })
+        .then(function(json){
+          if(json.success){
+            form.reset();
+            status.style.color = '#7ee0b8';
+            status.textContent = '送信しました。1〜2営業日以内にご返信します。ありがとうございました。';
+          } else {
+            status.style.color = '#ffb4b4';
+            status.textContent = '送信に失敗しました。お手数ですが info@rise-ai.jp までご連絡ください。';
+          }
+        })
+        .catch(function(){
+          status.style.color = '#ffb4b4';
+          status.textContent = '送信に失敗しました。時間をおいて再度お試しいただくか、info@rise-ai.jp までご連絡ください。';
+        })
+        .finally(function(){
+          btn.disabled = false; btn.style.opacity = ''; btn.innerHTML = original;
+        });
+      });
     })();
   </script>
 </body>
