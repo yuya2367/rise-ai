@@ -195,6 +195,8 @@
     .facts td strong{font-weight:600;color:var(--ink)}
     .facts a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(108,43,217,.35);padding-bottom:1px}
     .facts a:hover{border-bottom-color:var(--accent)}
+    .company-logo{width:clamp(64px,9vw,92px);height:auto;border-radius:16px;display:block;flex-shrink:0}
+    @media (max-width:760px){ .company-logo{margin-top:.4rem} }
     .prep{display:inline-block;font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;color:var(--muted);background:var(--paper-2);border:1px solid var(--line);border-radius:2px;padding:.15em .6em}
     .biz-list{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.5rem}
     .biz-list li{font-size:.9rem;border:1px solid var(--line-2);border-radius:2px;padding:.3em .75em;color:var(--ink)}
@@ -462,7 +464,7 @@
             <span class="mono eyebrow">Company — 会社概要</span>
             <h2 class="sec-title">会社概要</h2>
           </div>
-          <p class="sec-note">確定情報が届き次第、順次更新します。</p>
+          <img class="company-logo" src="assets/logo-icon.png" alt="合同会社ライズ ロゴ">
         </div>
 
         <table class="facts reveal">
